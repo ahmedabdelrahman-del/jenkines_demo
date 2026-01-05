@@ -7,7 +7,6 @@ pipeline{
                 //compile code here a java code
                 sh 'javac ToUpper.java'
                 
-
             }
         }
 }
