@@ -1,0 +1,48 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ECRPushAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:PutImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload",
+        "ecr:DescribeRepositories",
+        "ecr:ListImages"
+      ],
+      "Resource": "arn:aws:ecr:us-east-1:6469-7752-661:repository/task-api"
+    },
+    {
+      "Sid": "ECSDeployAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:UpdateService",
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition",
+        "ecs:DescribeTasks",
+        "ecs:ListTasks"
+      ],
+      "Resource": [
+        "arn:aws:ecs:us-east-1:6469-7752-661:service/task-api-cluster-staging/task-api-service-staging",
+        "arn:aws:ecs:us-east-1:6469-7752-661:service/task-api-cluster-prod/task-api-service-prod",
+        "arn:aws:ecs:us-east-1:6469-7752-661:task-definition/task-api:*"
+      ]
+    },
+    {
+      "Sid": "IAMPassRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::6469-7752-661:role/ecsTaskExecutionRole",
+        "arn:aws:iam::6469-7752-661:role/ecsTaskRole"
+      ]
+    }
+  ]
+}
