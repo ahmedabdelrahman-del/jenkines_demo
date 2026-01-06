@@ -1,0 +1,24 @@
+# Git files
+.git
+.gitignore
+
+# IDE files
+.vscode
+.idea
+
+# Test files
+*_test.go
+
+# Documentation
+README.md
+
+# CI/CD
+Jenkinsfile
+
+# Temporary files
+*.tmp
+*.log
+
+# Java files (not needed for Go app)
+*.java
+*.class
