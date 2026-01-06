@@ -46,8 +46,44 @@ aws logs create-log-group \
 echo "✓ CloudWatch log groups created"
 echo ""
 
-# Step 3: Create ECS Clusters
-echo "[3/5] Creating ECS Clusters..."
+# Step 3: Create IAM Roles for ECS
+echo "[3/6] Creating IAM Roles..."
+
+# Create ECS Task Execution Role
+aws iam create-role \
+  --role-name ecsTaskExecutionRole \
+  --assume-role-policy-document '{
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": {"Service": "ecs-tasks.amazonaws.com"},
+      "Action": "sts:AssumeRole"
+    }]
+  }' 2>/dev/null || echo "ecsTaskExecutionRole already exists"
+
+# Attach managed policy to execution role
+aws iam attach-role-policy \
+  --role-name ecsTaskExecutionRole \
+  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy \
+  2>/dev/null || echo "Policy already attached"
+
+# Create ECS Task Role (for container to access AWS services)
+aws iam create-role \
+  --role-name ecsTaskRole \
+  --assume-role-policy-document '{
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": {"Service": "ecs-tasks.amazonaws.com"},
+      "Action": "sts:AssumeRole"
+    }]
+  }' 2>/dev/null || echo "ecsTaskRole already exists"
+
+echo "✓ IAM Roles created"
+echo ""
+
+# Step 4: Create ECS Clusters
+echo "[4/6] Creating ECS Clusters..."
 aws ecs create-cluster \
   --cluster-name $ECS_CLUSTER_STAGING \
   --region $AWS_REGION \
@@ -61,8 +97,8 @@ aws ecs create-cluster \
 echo "✓ ECS Clusters created"
 echo ""
 
-# Step 4: Register Task Definition (Staging)
-echo "[4/5] Registering Task Definitions..."
+# Step 5: Register Task Definition (Staging)
+echo "[5/6] Registering Task Definitions..."
 
 # Create task definition JSON
 cat > /tmp/task-definition-staging.json << EOF
@@ -117,8 +153,8 @@ aws ecs register-task-definition \
 echo "✓ Task Definition registered"
 echo ""
 
-# Step 5: Create ECS Services
-echo "[5/5] Creating ECS Services..."
+# Step 6: Create ECS Services
+echo "[6/6] Creating ECS Services..."
 echo ""
 echo "⚠️  Note: Before creating services, ensure you have:"
 echo "   - VPC with public subnets"
