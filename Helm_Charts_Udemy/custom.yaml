@@ -1,0 +1,16 @@
+#1) set our own wordpress username && password
+#2) Increase the replica count to 3
+
+wordpressUsername: admin
+existingSecret: custom-wordpress-secret
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 5
+  targetCPU: 50
+  targetMemory: 50
+  targetCPUUtilizationPercentage: 80  
+service:
+  ## @param service.type WordPress service type
+  ##
+  type: NodePort

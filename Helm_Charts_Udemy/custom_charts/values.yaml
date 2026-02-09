@@ -1,0 +1,15 @@
+# customize our replica count
+# customize image both name and tag
+# customize our service type and port
+# parameter number of replicas to depoly
+replicaCount: 1
+# setting for nginx image which is image name, tag and pull policy
+image:
+  name: nginx
+  tag: 1.27.0
+  pullPolicy: IfNotPresent
+  ## setting for nginx service for service.type and service.port
+service:
+  #enabled: true
+  defaultPort: 80
+  type: ClusterIP
