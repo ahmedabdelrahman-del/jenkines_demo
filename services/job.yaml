@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata: 
+  name: single-job
+spec:
+  completions: 1
+  parallelism: 1
+  template:
+    spec:
+      containers:
+      - name: single-job
+        image: busybox
+        command: ["echo", "Hello, World!"]
+      restartPolicy: Never
+
